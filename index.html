@@ -20,10 +20,10 @@
     if (!pairs.length || !pairs.every(function (p) { return /^sharecode=/.test(p); })) return;
     shareQuery = location.search;
   }
-  try {
-    var payload = JSON.parse(localStorage.getItem('wen_funnel_v1') || 'null');
-    if ((payload && !payload.applied && payload.bd) || localStorage.getItem('wen_load_profile_v1')) return;
-  } catch (_) { /* Storage may be unavailable; the entrance still works. */ }
+  /* 问卷交接与档案载入都显式跳转到 ./index.html，不会经过目录 URL；
+     所以目录 URL（/）永远是新的一次进入，一律回漏斗页。
+     以前这里会因残留的待交接数据 / 档案标记而留在 index.html，
+     导致首次打开直接看到上一次的预告页。 */
   location.replace('./funnel.html' + shareQuery);
 })();
 </script>
@@ -117,6 +117,7 @@
 <link rel="stylesheet" href="/src/character-theme.css">
 <link rel="stylesheet" href="/src/entry-flow.css">
 <link rel="stylesheet" href="/src/unslop.css">
+<link rel="stylesheet" href="/src/ui-upgrade.css">
 <!-- enhance / evolve / guide 已改为随 main.js 分包加载（见 src/main.js 顶部）：
      首帧不渲染这些区域，避免阻塞首页；Node 单测不 import main.js，无需担心 CSS 解析。 -->
 <style>
